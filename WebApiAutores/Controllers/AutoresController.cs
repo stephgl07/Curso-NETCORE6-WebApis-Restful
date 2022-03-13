@@ -88,6 +88,11 @@ namespace WebApiAutores.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] beAutor autor)
         {
+            var existeAutorConMismoNombre = await context.Autores.AnyAsync(x => x.Nombre == autor.Nombre);
+            if (existeAutorConMismoNombre)
+            {
+                return BadRequest($"Ya existe un autor con el nombre {autor.Nombre}");
+            }
             context.Add(autor);
             await context.SaveChangesAsync();
             return Ok();
