@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using WebApiAutores.Controllers;
+using WebApiAutores.Middlewares;
 using WebApiAutores.Servicios;
 
 namespace WebApiAutores
@@ -47,8 +48,22 @@ namespace WebApiAutores
 
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
+            //Primera manera de invocar middlewares
+            //app.UseMiddleware<LoggerResponseHTTPMd>();
+
+            //Segunda manera de invocar middlewares (se crea case estática en clase Middleware para llamar unicamente a la funcion
+            app.UseLoggerResponseHTTP();
+
+
+            //Creando un middleware configurandolo con el IApplicationBuilder
+            app.Map("/ruta1", app => {
+                app.Run(async contexto => {
+                    await contexto.Response.WriteAsync("Interceptando la tuberia");
+                });
+            });
+
             // Configure the HTTP request pipeline.
             if (env.IsDevelopment())
             {
