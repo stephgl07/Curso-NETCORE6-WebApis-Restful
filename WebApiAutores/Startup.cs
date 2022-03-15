@@ -49,6 +49,8 @@ namespace WebApiAutores
 
             services.AddTransient<MiFiltroDeAccion>();
 
+            services.AddHostedService<EscribirEnArchivo>();
+
             services.AddResponseCaching();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
